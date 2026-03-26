@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الوظائف المتاحة | Available Jobs</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@400;700;900&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --card: #111827;
+    --card-hover: #1a2540;
+    --accent: #f59e0b;
+    --accent2: #10b981;
+    --accent3: #3b82f6;
+    --accent4: #ec4899;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: font-family 0.2s;
+  }
+
+  body.en {
+    font-family: 'Sora', sans-serif;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(245,158,11,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(59,130,246,0.07) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Language Toggle */
+  .lang-bar {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    background: rgba(17,24,39,0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 4px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  .lang-btn {
+    padding: 7px 22px;
+    border-radius: 100px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+  }
+
+  .lang-btn.active {
+    background: var(--accent);
+    color: #0a0f1e;
+  }
+
+  /* Container */
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 100px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 64px;
+    animation: fadeDown 0.7s ease both;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: var(--accent);
+    border-radius: 100px;
+    padding: 6px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+
+  h1 {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  body.en h1 {
+    font-family: 'Sora', sans-serif;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent), #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.75;
+  }
+
+  .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin: 24px auto 0;
+    border-radius: 2px;
+  }
+
+  /* Grid */
+  .jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 24px;
+  }
+
+  @media(max-width: 500px) {
+    .jobs-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Job Card */
+  .job-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .job-card:nth-child(1) { animation-delay: 0.1s; --c: var(--accent); }
+  .job-card:nth-child(2) { animation-delay: 0.2s; --c: var(--accent2); }
+  .job-card:nth-child(3) { animation-delay: 0.3s; --c: var(--accent3); }
+  .job-card:nth-child(4) { animation-delay: 0.4s; --c: var(--accent4); }
+
+  .job-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 130px; height: 130px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--c) 18%, transparent) 0%, transparent 70%);
+    border-radius: 0 20px 0 100%;
+  }
+
+  .job-card:hover {
+    transform: translateY(-6px);
+    background: var(--card-hover);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px color-mix(in srgb, var(--c) 30%, transparent);
+  }
+
+  .job-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--c) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .job-category {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--c);
+    margin-bottom: 6px;
+  }
+
+  .job-title-ar, .job-title-en {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: var(--text);
+  }
+
+  .job-title-en {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.25rem;
+  }
+
+  .job-title-ar { margin-bottom: 4px; }
+  .job-title-en { margin-bottom: 14px; color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+
+  /* In English mode, swap prominence */
+  body.en .job-title-ar { font-size: 0.95rem; font-weight: 500; color: var(--muted); margin-bottom: 4px; font-family: 'Cairo', sans-serif; }
+  body.en .job-title-en { font-size: 1.3rem; font-weight: 800; color: var(--text); margin-bottom: 14px; font-family: 'Sora', sans-serif; }
+
+  .job-desc {
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 28px;
+  }
+
+  /* Show/hide lang content */
+  .ar-text { display: block; }
+  .en-text { display: none; }
+  body.en .ar-text { display: none; }
+  body.en .en-text { display: block; }
+
+  .apply-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: color-mix(in srgb, var(--c) 18%, transparent);
+    border: 1.5px solid color-mix(in srgb, var(--c) 45%, transparent);
+    color: var(--c);
+    border-radius: 12px;
+    padding: 11px 24px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    font-family: inherit;
+  }
+
+  .apply-btn:hover {
+    background: color-mix(in srgb, var(--c) 25%, transparent);
+    transform: scale(1.03);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--c) 22%, transparent);
+  }
+
+  .apply-btn svg {
+    width: 15px; height: 15px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  /* RTL: arrow points left; LTR: arrow points right */
+  html[dir="rtl"] .apply-btn svg { transform: rotate(180deg); }
+  html[dir="ltr"] .apply-btn svg { transform: rotate(0deg); }
+
+  .apply-btn:hover svg { transform: rotate(180deg) translateX(-3px); }
+  html[dir="ltr"] .apply-btn:hover svg { transform: translateX(3px); }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 72px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    animation: fadeUp 0.6s ease 0.6s both;
+    line-height: 2;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* Animations */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body id="body-root">
+
+<!-- Language Toggle -->
+<div class="lang-bar">
+  <button class="lang-btn active" onclick="setLang('ar')" id="btn-ar">العربية</button>
+  <button class="lang-btn" onclick="setLang('en')" id="btn-en">English</button>
+</div>
+
+<div class="container">
+
+  <header>
+    <div class="logo-badge">
+      <span class="ar-text">🌿 فرص العمل المتاحة</span>
+      <span class="en-text">🌿 Open Positions</span>
+    </div>
+    <h1>
+      <span class="ar-text">نحن <span>نبحث</span> عن<br>كفاءات متميزة</span>
+      <span class="en-text">We're Looking for<br><span>Talented</span> People</span>
+    </h1>
+    <p class="subtitle">
+      <span class="ar-text">تصفّح الوظائف المتاحة وقدّم طلبك مباشرةً عبر النموذج الإلكتروني</span>
+      <span class="en-text">Browse our open positions and apply directly through the online form</span>
+    </p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="jobs-grid">
+
+    <!-- Card 1: Agricultural Engineer -->
+    <div class="job-card">
+      <div class="job-icon">🌱</div>
+      <div class="job-category">Agriculture · زراعة</div>
+      <div class="job-title-ar">مهندس زراعي</div>
+      <div class="job-title-en">Agricultural Engineer</div>
+      <div class="job-desc">
+        <span class="ar-text">نبحث عن مهندس زراعي ذي خبرة لإدارة المشاريع الزراعية والإشراف على الإنتاج ورفع كفاءة العمليات الحقلية.</span>
+        <span class="en-text">We are looking for an experienced agricultural engineer to manage farming projects, oversee production, and improve field operation efficiency.</span>
+      </div>
+      <a class="apply-btn" href="https://forms.gle/xk3rqLdYgbbrKnqv7" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="ar-text">تقدّم الآن</span>
+        <span class="en-text">Apply Now</span>
+      </a>
+    </div>
+
+    <!-- Card 2: Social Media -->
+    <div class="job-card">
+      <div class="job-icon">📲</div>
+      <div class="job-category">Marketing · تسويق</div>
+      <div class="job-title-ar">موظف سوشيال ميديا</div>
+      <div class="job-title-en">Social Media Specialist</div>
+      <div class="job-desc">
+        <span class="ar-text">نبحث عن موظف سوشيال ميديا مبدع يمتلك مهارات إنشاء المحتوى وإدارة منصات التواصل الاجتماعي وتحليل النتائج.</span>
+        <span class="en-text">We are looking for a creative social media specialist with skills in content creation, platform management, and performance analytics.</span>
+      </div>
+      <a class="apply-btn" href="https://forms.gle/KCHYz3JWdURs5EeW7" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="ar-text">تقدّم الآن</span>
+        <span class="en-text">Apply Now</span>
+      </a>
+    </div>
+
+    <!-- Card 3: Supervisor -->
+    <div class="job-card">
+      <div class="job-icon">👷</div>
+      <div class="job-category">Operations · عمليات</div>
+      <div class="job-title-ar">مشرف عمال</div>
+      <div class="job-title-en">Field Supervisor</div>
+      <div class="job-desc">
+        <span class="ar-text">نبحث عن مشرف عمال كفء لقيادة فرق العمل الميدانية وضمان سير العمليات بكفاءة وجودة عالية.</span>
+        <span class="en-text">We are looking for a capable field supervisor to lead on-site teams and ensure operations run with high efficiency and quality standards.</span>
+      </div>
+      <a class="apply-btn" href="https://forms.gle/oHM8mdyDxegPWZ6p8" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="ar-text">تقدّم الآن</span>
+        <span class="en-text">Apply Now</span>
+      </a>
+    </div>
+
+    <!-- Card 4: Sales -->
+    <div class="job-card">
+      <div class="job-icon">📊</div>
+      <div class="job-category">Sales · مبيعات</div>
+      <div class="job-title-ar">مندوب مبيعات</div>
+      <div class="job-title-en">Sales Representative</div>
+      <div class="job-desc">
+        <span class="ar-text">نبحث عن مندوب مبيعات نشيط يمتلك مهارات التفاوض وبناء علاقات العملاء وتحقيق الأهداف البيعية.</span>
+        <span class="en-text">We are looking for an energetic sales representative with strong negotiation skills, client relationship building, and the drive to hit targets.</span>
+      </div>
+      <a class="apply-btn" href="https://forms.gle/TiY2QWwSPFK72sAz5" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <span class="ar-text">تقدّم الآن</span>
+        <span class="en-text">Apply Now</span>
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    <span class="ar-text">جميع الحقوق محفوظة &copy; 2025 &nbsp;·&nbsp; الطلبات تُقبل عبر النماذج الإلكترونية فقط</span>
+    <span class="en-text">All rights reserved &copy; 2025 &nbsp;·&nbsp; Applications are accepted via online forms only</span>
+  </footer>
+
+</div>
+
+<script>
+  function setLang(lang) {
+    const html = document.getElementById('html-root');
+    const body = document.getElementById('body-root');
+    const btnAr = document.getElementById('btn-ar');
+    const btnEn = document.getElementById('btn-en');
+
+    if (lang === 'en') {
+      html.setAttribute('lang', 'en');
+      html.setAttribute('dir', 'ltr');
+      body.classList.add('en');
+      btnEn.classList.add('active');
+      btnAr.classList.remove('active');
+      document.title = 'Available Jobs | الوظائف المتاحة';
+    } else {
+      html.setAttribute('lang', 'ar');
+      html.setAttribute('dir', 'rtl');
+      body.classList.remove('en');
+      btnAr.classList.add('active');
+      btnEn.classList.remove('active');
+      document.title = 'الوظائف المتاحة | Available Jobs';
+    }
+  }
+</script>
+
+</body>
+</html>
